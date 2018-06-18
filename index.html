@@ -1,151 +1,161 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>Playground</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
-    <script src="https://cdn.firebase.com/libs/firebaseui/3.0.0/firebaseui.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.0.0/firebaseui.css" />
+  <title>Playground</title>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.0.0/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.0.0/firebaseui.css" />
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
-    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
+  <script type="module">
+    import '@polymer/polymer/lib/elements/dom-bind.js'; 
+    import '@polymer/polymer/lib/elements/dom-if.js'; 
+    import '@polymer/paper-button/paper-button.js';
+    import '@polymer/iron-pages/iron-pages.js'; 
+    import '@polymer/iron-ajax/iron-ajax.js'; 
+    import '@polymer/iron-selector/iron-selector.js';
+    import '@polymer/app-route/app-route.js'; 
+    import '@polymer/app-route/app-location.js'; 
+    import '@polymer/app-layout/app-drawer/app-drawer.js';
+    import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js'; 
+    import '@polymer/app-layout/app-header/app-header.js';
+    import '@polymer/app-layout/app-header-layout/app-header-layout.js'; 
+    import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js';
+    import '@polymer/app-layout/app-toolbar/app-toolbar.js'; 
+    import '@vaadin/vaadin-button/vaadin-button.js'; 
+    import '@vaadin/vaadin-grid/vaadin-grid-column.js';
+    import '@vaadin/vaadin-grid/vaadin-grid.js'; 
+    import '@whcg/whcg-box-container'; 
+    import '@whcg/whcg-chart'; 
+    import '@whcg/whcg-chart-feeder';
+    import '@whcg/whcg-grid'; 
+    import '@whcg/whcg-json-merger'; 
+    import '@whcg/whcg-login-check'; 
+    import '@whcg/whcg-login-fields';
+    import '@whcg/whcg-number-field'; 
+    import '@whcg/whcg-number-field-box'; 
+    import '@whcg/whcg-period-compounder';
+  </script>
+  <style>
+    body {
+      --app-primary-color: #4285f4;
+      --app-secondary-color: black;
+      display: block;
+      font-family: 'Roboto', sans-serif;
+    }
 
-    
+    app-header {
+      color: #fff;
+      background-color: var(--app-primary-color);
+    }
+  </style>
+</head>
 
-    <script type="module">
-      import '@polymer/polymer/lib/elements/dom-bind.js';
-      import '@polymer/polymer/lib/elements/dom-if.js';
-      import '@polymer/paper-button/paper-button.js';
-      import '@polymer/iron-pages/iron-pages.js';
-      import '@polymer/iron-ajax/iron-ajax.js';
-      import '@polymer/iron-selector/iron-selector.js';
-      import '@polymer/app-route/app-route.js';
-      import '@polymer/app-route/app-location.js';
-      import '@polymer/app-layout/app-drawer/app-drawer.js';
-      import '@polymer/app-layout/app-drawer-layout/app-drawer-layout.js';
-      import '@polymer/app-layout/app-header/app-header.js';
-      import '@polymer/app-layout/app-header-layout/app-header-layout.js';
-      import '@polymer/app-layout/app-scroll-effects/app-scroll-effects.js';
-      import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+<body>
+  <dom-bind>
+    <template>
 
-      import '@vaadin/vaadin-button/vaadin-button.js';
-      import '@vaadin/vaadin-grid/vaadin-grid-column.js';
-      import '@vaadin/vaadin-grid/vaadin-grid.js';
+      <app-location route="{{route}}" use-hash-as-path></app-location>
+      <app-route route="{{route}}" pattern="/:login" data="{{loginData}}" tail="{{tail}}">
+      </app-route>
 
-      import '@whcg/whcg-box-container';
-      import '@whcg/whcg-chart';
-      import '@whcg/whcg-chart-feeder';
-      import '@whcg/whcg-grid';
-      import '@whcg/whcg-json-merger';
-      import '@whcg/whcg-login-check';
-      import '@whcg/whcg-login-fields';
-      import '@whcg/whcg-number-field';
-      import '@whcg/whcg-number-field-box';
-      import '@whcg/whcg-period-compounder';
-
-
-
-
-
-
-    </script>
-    <style>
-      body {
-        --app-primary-color: #4285f4;
-        --app-secondary-color: black;
-        display: block;
-        font-family: 'Roboto', sans-serif;
-      }
-
-      app-header {
-        color: #fff;
-        background-color: var(--app-primary-color);
-      }
-
-    </style>
-  </head>
-  <body>
-    <dom-bind>
-      <template>
-
-          
-<app-location route="{{route}}" use-hash-as-path></app-location>
-<app-route
-    route="{{route}}"
-    pattern="/:login"
-    data="{{loginData}}"
-    tail="{{tail}}">
-</app-route>
-
-<whcg-login-check user="{{user}}" path="{{loginData.login}}" tail="{{tail}}"></whcg-login-check>
+      <whcg-login-check user="{{user}}" path="{{loginData.login}}" tail="{{tail}}"></whcg-login-check>
 
 
-<app-header reveals>
-<app-toolbar>
-  <div main-title>huvudrubrik</div>
-  <iron-selector attr-for-selected="key" selected="{{tail.path}}" >
-      <template is="dom-if" if="{{user}}">
-          <a href="#/{{loginData.login}}/one" key="/one">ONE</a>
-          <a href="#/{{loginData.login}}/two" key="/two">TWO</a>
-          <a href="#/{{loginData.login}}/three" key="/three">THREE</a>
-        </template>
+      <app-header reveals>
+        <app-toolbar>
+          <div main-title>huvudrubrik</div>
+          <iron-selector attr-for-selected="key" selected="{{tail.path}}">
+            <template is="dom-if" if="{{user}}">
+              <a href="#/{{loginData.login}}/one" key="/one">ONE</a>
+              <a href="#/{{loginData.login}}/two" key="/two">TWO</a>
+              <a href="#/{{loginData.login}}/three" key="/three">THREE</a>
+            </template>
 
-      <template is="dom-if" if="{{!user}}">
-          <a href="#/{{loginData.login}}/two" key="/two">TWO</a>
-          <a href="#/{{loginData.login}}/three" key="/three">THREE</a>
-        </template>
-  </iron-selector>
+            <template is="dom-if" if="{{!user}}">
+              <a href="#/{{loginData.login}}/one" key="/one">ONE</a>
+              <a href="#/{{loginData.login}}/two" key="/two">TWO</a>
+              <a href="#/{{loginData.login}}/three" key="/three">THREE</a>
+            </template>
+          </iron-selector>
 
-  <whcg-login-fields apikey="AIzaSyBg0h8l3HLHl5ukcr4D9xInKW7P_yhdoyM"
-            projectId="test-d7150"
-            user="{{user}}">
-  </whcg-login-fields>
+          <whcg-login-fields apikey="AIzaSyBg0h8l3HLHl5ukcr4D9xInKW7P_yhdoyM" projectId="test-d7150" user="{{user}}">
+          </whcg-login-fields>
 
-</app-toolbar>
-</app-header>
+        </app-toolbar>
+      </app-header>
 
-<hero-component></hero-component>
+      <iron-pages selected="{{tail.path}}" attr-for-selected="key" fallback-selection="/">
+        <div key="/one">
+          <div hidden$="{{!user}}">USER CONTENT ONE</div>
+          <div hidden$="{{user}}">NOT USER CONTENT</div>
+        </div>
 
-<iron-pages selected="{{tail.path}}" attr-for-selected="key" fallback-selection="/">
-<div key="/one">
-  <div hidden$="{{!user}}">USER CONTENT ONE</div>
-  <div hidden$="{{user}}">NOT USER CONTENT</div>
-</div>
+        <div key="/two">
+          <div hidden$="{{!user}}">USER CONTENT TWO</div>
+          <div hidden$="{{user}}">NOT USER CONTENT TWO</div>
+        </div>
 
-<div key="/two">
-  <div hidden$="{{!user}}">USER CONTENT TWO</div>
-  <div hidden$="{{user}}">NOT USER CONTENT TWO</div>
-</div>                  
+        <div key="/three">
+          <div hidden$="{{!user}}">USER CONTENT THREE</div>
+          <div hidden$="{{user}}">NOT USER CONTENT THREE</div>
+        </div>
 
-<div key="/three">
-  <div hidden$="{{!user}}">USER CONTENT THREE</div>
-  <div hidden$="{{user}}">
+        <div key="/">
+          StartPage
+        </div>
+     
+      </iron-pages>
 
+      <whcg-box-container name="Kostnader">
+          <whcg-number-field-box column kind="cost" label="kr" name="Elkostnad" period="0" whcgjsonoutput="{{initialElectricityCost}}"
+            type="electricity">
+            <whcg-number-field kind="amount" period="0" label="kwh" placeholder="...antal" value="12" suffix="kWh"></whcg-number-field>
+            <whcg-number-field kind="price" period="0" label="kr/kWh" placeholder="... antal" value="8" suffix="kr"></whcg-number-field>
+          </whcg-number-field-box>
+        
+          <whcg-number-field-box column kind="cost" label="kr" name="Vattenkostnad" period="0" whcgjsonoutput="{{initialWaterCost}}"
+            type="water">
+            <whcg-number-field kind="amount" period="0" label="m3" placeholder="...antal" value="45" suffix="m3"></whcg-number-field>
+            <whcg-number-field kind="price" period="0" label="kr/m3" placeholder="... antal" value="3" suffix="kr"></whcg-number-field>
+          </whcg-number-field-box>
+        
+        
+        <whcg-number-field-box column>
+          <whcg-number-field placeholder="...antal" value="0.02" suffix="%" valueoutput="{{inflation}}"></whcg-number-field>
+          <whcg-number-field placeholder="...antal" value="8" suffix="år" valueoutput="{{period}}"></whcg-number-field>
+        </whcg-number-field-box>
+        
+        
+        </whcg-box-container>
+        
+        <whcg-period-compounder name="Vattenkostnader" whcgjsonoutput="{{whcgWaterJson}}" label="Water" period="{{period}}" rate="{{inflation}}" initial-value="{{initialWaterCost}}"></whcg-period-compounder>
+        <whcg-chart-feeder whcgjsoninput="[[whcgWaterJson]]" datapackage="yearlyamounts" chartjs="{{chartJsJson}}"></whcg-chart-feeder>
+        
+        <whcg-period-compounder name="Elkostnader" whcgjsonoutput="{{whcgElectricityJson}}" label="Electricity" period="{{period}}" rate="{{inflation}}" initial-value="{{initialElectricityCost}}"></whcg-period-compounder>
+        <whcg-chart-feeder whcgjsoninput="[[whcgElectricityJson]]" datapackage="yearlyamounts" chartjs="{{chartJsJson2}}"></whcg-chart-feeder>
+        
+        <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsJson}}"></whcg-chart>
+        <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsJson2}}"></whcg-chart>
+        
+        
+        <whcg-json-merger whcgjsonoutput="{{whcgCostsJson}}" whcgjsonarrayinput="[{{whcgElectricityJson}}, {{whcgWaterJson}}]"></whcg-json-merger>
+        <whcg-chart-feeder whcgjsoninput="[[whcgCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsJson3}}"></whcg-chart-feeder>
+        <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsJson3}}"></whcg-chart>
+        
+        <whcg-grid griddatastr="{{whcgCostsJson}}"></whcg-grid>
 
-
-   
-
-
-    {{result1}}
-
-
-  </div>
-</div>
-
-<div key="/">
-  StartPage
-</div>
-</iron-pages>
-
-          <!-- <whcg-number-field-box column kind="cost" label="kr" name="Elkostnad" period="0" output-string="{{initialElectricityCosts}}" type="electricity">
+      <!-- <whcg-number-field-box column kind="cost" label="kr" name="Elkostnad" period="0" output-string="{{initialElectricityCosts}}" type="electricity">
               <whcg-number-field kind="amount" period="0" label="kwh" placeholder="...antal" value="12" suffix="kWh"></whcg-number-field>
               <whcg-number-field kind="price" period="0" label="kr/kWh" placeholder="... antal" value="8" suffix="kr"></whcg-number-field>
           </whcg-number-field-box>
@@ -155,9 +165,9 @@
               <whcg-number-field kind="price" period="0" label="kr/m3" placeholder="... antal" value="3" suffix="kr"></whcg-number-field>
           </whcg-number-field-box> -->
 
-          <whcg-select label="Rubrik" placeholder="Placeholder" data='[{"value": "1", "caption": "One"}, {"value": "2", "caption": "Two"}]'></whcg-select>
+      <whcg-select label="Rubrik" placeholder="Placeholder" data='[{"value": "1", "caption": "One"}, {"value": "2", "caption": "Two"}]'></whcg-select>
 
-        <!-- <whcg-box-container>
+      <!-- <whcg-box-container>
 
           <whcg-number-field-box column output="{{initialElectricityCosts}}">
             <whcg-number-field label="kwh" placeholder="...antal" value="13" suffix="kWh"></whcg-number-field>
@@ -183,13 +193,10 @@
         <whcg-period-compounder jsondata="{{electricityJson}}" label="Electricity" period="{{periodLength}}" rate="{{inflation}}" initial-value="{{initialElectricityCosts}}"></whcg-period-compounder>
         <whcg-period-compounder jsondata="{{waterJson}}" label="Water" period="{{periodLength}}" rate="{{inflation}}" initial-value="{{initialWaterCosts}}"></whcg-period-compounder> -->
 
-        <!-- <whcg-json-merger mergedjson="{{mergedjson}}" arrayreceiver="[{{waterJson}}, {{electricityJson}}]"></whcg-json-merger> -->
+      <!-- <whcg-json-merger mergedjson="{{mergedjson}}" arrayreceiver="[{{waterJson}}, {{electricityJson}}]"></whcg-json-merger> -->
 
 
-        <!-- <whcg-chart-feeder jsoninput="[[mergedjson]]" datapackage="suppliers" chartjs="{{chartJsJson}}"></whcg-chart-feeder> -->
-
-
-
+      <!-- <whcg-chart-feeder jsoninput="[[mergedjson]]" datapackage="suppliers" chartjs="{{chartJsJson}}"></whcg-chart-feeder> -->
 
 
 
@@ -197,16 +204,16 @@
 
 
 
-      </template>
-    </dom-bind>
 
 
 
-    <script>
+    </template>
+  </dom-bind>
 
-    </script>
 
 
+  <script>
+  </script>
 
 
 
@@ -218,7 +225,9 @@
 
 
 
-<!--   
+
+
+  <!--   
 <app-location route="{{route}}" use-hash-as-path></app-location>
 <app-route
     route="{{route}}"
@@ -305,7 +314,7 @@
 
 
 
-           <!-- <iron-ajax auto url="https://demo.vaadin.com/demo-data/1.0/people?count=200" handle-as="json" last-response="{{users}}"></iron-ajax>
+  <!-- <iron-ajax auto url="https://demo.vaadin.com/demo-data/1.0/people?count=200" handle-as="json" last-response="{{users}}"></iron-ajax>
 
 
     <vaadin-grid aria-label="Basic Binding Example" items="[[users.result]]">
@@ -339,5 +348,6 @@
 
     </vaadin-grid> -->
 
-  </body>
+</body>
+
 </html>
