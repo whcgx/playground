@@ -19,8 +19,8 @@
     "@whcg/whcg-json-merger": "^1.0.1",
     "@whcg/whcg-login-check": "^1.0.9",
     "@whcg/whcg-login-fields": "^1.0.13",
-    "@whcg/whcg-number-field": "^1.0.3",
-    "@whcg/whcg-number-field-box": "^1.0.6",
+    "@whcg/whcg-number-field": "^1.0.4",
+    "@whcg/whcg-number-field-box": "^1.0.7",
     "@whcg/whcg-period-compounder": "^1.0.1"
   },
   "devDependencies": {

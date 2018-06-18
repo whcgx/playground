@@ -12,7 +12,7 @@ class WhcgNumberField extends PolymerElement {
     static get template() {
         return html `
       
-    <vaadin-text-field value="{{value}}" label="{{label}}" placeholder="{{placeholder}}" theme="align-right" prevent-invalid-input pattern="[0-9]*" >
+    <vaadin-text-field value="{{value}}" label="{{label}}" placeholder="{{placeholder}}" theme="align-right" prevent-invalid-input pattern="[0-9,.]*" >
         <div slot="suffix">{{suffix}}</div>
     </vaadin-text-field>
 
@@ -32,6 +32,7 @@ class WhcgNumberField extends PolymerElement {
                 type: String,
                 notify: true,
                 readOnly: false,
+                observer: '_valueChanged'
             },
             placeholder: {
                 type: String,
@@ -52,14 +53,25 @@ class WhcgNumberField extends PolymerElement {
                 type: String,
                 notify: true,
                 readOnly: false,
+            },
+            valueoutput: {
+                type: String,
+                notify: true,
+                readOnly: false,
             }
         }
     }
+
+    _valueChanged() {
+        this.valueoutput = this.value;
+    }
+
     connectedCallback() {
         super.connectedCallback();
         let event = new CustomEvent('childrenattached', {bubbles: true, composed: true});
         console.log('dispatchingEvent!!');
         this.dispatchEvent(event);
+
     }
 
 }

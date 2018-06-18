@@ -1,7 +1,7 @@
 # &lt;whcg-number-field&gt;
 
 ```html
-<whcg-number-field label="first" placeholder="placeholder" value="5" suffix="£"></whcg-number-field>
+<whcg-number-field placeholder="...antal" value="0.02" suffix="%" valueoutput="{{inflation}}"></whcg-number-field>
 ```
 
 ## Getting started 
