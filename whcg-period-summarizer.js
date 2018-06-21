@@ -97,15 +97,16 @@ export class WhcgPeriodSummarizer extends PolymerElement {
         if (this.mode === 'multiply') {
             acc = 1;
         }
+
         let sums = datasetKeys.map(datasetKey => {
-            return test1.result.reduce((acc, item) => {
+            return test1.result.reduce((acc, item, index) => {
                 console.log(item.data.yearlyamounts.dataset);
                 console.log(Number(item.data.yearlyamounts.dataset[datasetKey]));
                 if (isNaN(Number(item.data.yearlyamounts.dataset[datasetKey]))) {
                     return acc;
                 } else {
 
-                    if(this.mode === 'subtract') {
+                    if(this.mode === 'subtract' && index > 0) {
                         return acc = acc - Number(item.data.yearlyamounts.dataset[datasetKey]);
                     } else if (this.mode === 'multiply') {
                         return acc = acc * Number(item.data.yearlyamounts.dataset[datasetKey]);

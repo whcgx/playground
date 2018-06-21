@@ -272,16 +272,16 @@
 
 
           <!-- Established Area -->
-          <whcg-json-maker name="initialarea" key="0" value="{{initialAreaAmount}}" datapackage="yearlyamounts" label="kvm" period="{{period}}"
+          <whcg-json-maker name="Initialt etablerad yta" key="0" value="{{initialAreaAmount}}" datapackage="yearlyamounts" label="kvm" period="{{period}}"
             fill whcgjsonoutput="{{whcgNonCompoundedAreaAmountsJson}}"></whcg-json-maker>
 
           <!-- Establish cost per sqm -->
-          <whcg-json-maker name="establishment" key="0" value="{{initialEstablishCostPerSqm}}" datapackage="yearlyamounts"
+          <whcg-json-maker name="Etableringskostnader per kvm" key="0" value="{{initialEstablishCostPerSqm}}" datapackage="yearlyamounts"
           label="kr" period="{{period}}" whcgjsonoutput="{{whcgInitialEstablishCostPerSqmJson}}"></whcg-json-maker>
 
           <!-- Establish cost -->
           <whcg-json-merger whcgjsonoutput="{{whcgInitialEstablishCostPerSqmAndNonCompoundedAreaAmountsJson}}" whcgjsonarrayinput="[{{whcgInitialEstablishCostPerSqmJson}}, {{whcgNonCompoundedAreaAmountsJson}}]"></whcg-json-merger>
-          <whcg-period-summarizer mode="multiply" name="Avvecklingskostnader" whcgjsonoutput="{{whcgInitialEstablishCost}}" whcgjsoninput="{{whcgInitialEstablishCostPerSqmAndNonCompoundedAreaAmountsJson}}"></whcg-period-summarizer>
+          <whcg-period-summarizer mode="multiply" name="Etableringskostnader" whcgjsonoutput="{{whcgInitialEstablishCost}}" whcgjsoninput="{{whcgInitialEstablishCostPerSqmAndNonCompoundedAreaAmountsJson}}"></whcg-period-summarizer>
 
 
           <!-- Area modifications -->
@@ -309,71 +309,82 @@
 
           <!-- Expand areas -->
           <whcg-json-merger whcgjsonoutput="{{whcgExpansionAreasJson}}" whcgjsonarrayinput="[{{whcgExpansionOneJson}}, {{whcgExpansionTwoJson}}, {{whcgExpansionThreeJson}}, {{whcgExpansionFourJson}}, {{whcgExpansionFiveJson}}]"></whcg-json-merger>
-          <whcg-period-summarizer name="sumOfExpansionAreas" mode="add" whcgjsonoutput="{{whcgSumExpansionAreasJson}}" whcgjsoninput="{{whcgExpansionAreasJson}}"></whcg-period-summarizer>
+          <whcg-period-summarizer name="Expanderad yta" mode="add" whcgjsonoutput="{{whcgSumExpansionAreasJson}}" whcgjsoninput="{{whcgExpansionAreasJson}}"></whcg-period-summarizer>
 
           <!-- Expand cost per sqm -->
-          <whcg-json-maker name="expansion" key="0" value="{{initialExpandCostPerSqm}}" datapackage="yearlyamounts"
+          <whcg-json-maker name="Expansionskostnader per kvm (ej uppräknade)" key="0" value="{{initialExpandCostPerSqm}}" datapackage="yearlyamounts"
           label="kr" period="{{period}}" fill whcgjsonoutput="{{whcgNonCompoundedExpandCostsPerSqmJson}}"></whcg-json-maker>
-          <whcg-period-compounder name="expansion" whcgjsonoutput="{{whcgCompoundedExpandCostsPerSqmJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
+          <whcg-period-compounder name="Expansionskostnader per kvm" whcgjsonoutput="{{whcgCompoundedExpandCostsPerSqmJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
           rate="{{inflation}}" whcgjsoninput="{{whcgNonCompoundedExpandCostsPerSqmJson}}"></whcg-period-compounder>
 
           <!-- Expand cost -->
           <whcg-json-merger whcgjsonoutput="{{whcgCompoundedExpandCostsPerSqmAndSumExpansionAreasJson}}" whcgjsonarrayinput="[{{whcgCompoundedExpandCostsPerSqmJson}}, {{whcgSumExpansionAreasJson}}]"></whcg-json-merger>
           <whcg-period-summarizer mode="multiply" name="Expansionskostnader" whcgjsonoutput="{{whcgCompoundedExpandCostsJson}}" whcgjsoninput="{{whcgCompoundedExpandCostsPerSqmAndSumExpansionAreasJson}}"></whcg-period-summarizer>
-
+          <whcg-period-discounter name="Expansionskostnader per kvm (diskonterade)" whcgjsonoutput="{{whcgDiscountedCompoundedExpandCostsJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
+          rate="{{discountrate}}" whcgjsoninput="{{whcgCompoundedExpandCostsJson}}"></whcg-period-discounter>
          
           <!-- Decline areas -->
           <whcg-json-merger whcgjsonoutput="{{whcgDeclineAreasJson}}" whcgjsonarrayinput="[{{whcgDeclineOneJson}}, {{whcgDeclineTwoJson}}, {{whcgDeclineThreeJson}}, {{whcgDeclineFourJson}}, {{whcgDeclineFiveJson}}]"></whcg-json-merger>
-          <whcg-period-summarizer name="sumOfDeclineAreas" mode="subtract" whcgjsonoutput="{{whcgSumDeclineAreasJson}}" whcgjsoninput="{{whcgDeclineAreasJson}}"></whcg-period-summarizer>
+          <whcg-period-summarizer name="Avvecklad yta" mode="add" whcgjsonoutput="{{whcgSumDeclineAreasJson}}" whcgjsoninput="{{whcgDeclineAreasJson}}"></whcg-period-summarizer>
           
           <!-- Decline cost per sqm -->
-          <whcg-json-maker name="decline" key="0" value="{{initialDeclineCostPerSqm}}" datapackage="yearlyamounts"
+          <whcg-json-maker name="Avvecklingskostnader per kvm (ej uppräknade)" key="0" value="{{initialDeclineCostPerSqm}}" datapackage="yearlyamounts"
           label="kr" period="{{period}}" fill whcgjsonoutput="{{whcgNonCompoundedDeclineCostsPerSqmJson}}"></whcg-json-maker>
-          <whcg-period-compounder name="decline" whcgjsonoutput="{{whcgCompoundedDeclineCostsPerSqmJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
+          <whcg-period-compounder name="Avvecklingskostnader per kvm" whcgjsonoutput="{{whcgCompoundedDeclineCostsPerSqmJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
           rate="{{inflation}}" whcgjsoninput="{{whcgNonCompoundedDeclineCostsPerSqmJson}}"></whcg-period-compounder>
 
           <!-- Decline cost -->
           <whcg-json-merger whcgjsonoutput="{{whcgCompoundedDeclineCostsPerSqmAndSumDeclineAreasJson}}" whcgjsonarrayinput="[{{whcgCompoundedDeclineCostsPerSqmJson}}, {{whcgSumDeclineAreasJson}}]"></whcg-json-merger>
           <whcg-period-summarizer mode="multiply" name="Avvecklingskostnader" whcgjsonoutput="{{whcgCompoundedDeclineCostsJson}}" whcgjsoninput="{{whcgCompoundedDeclineCostsPerSqmAndSumDeclineAreasJson}}"></whcg-period-summarizer>
-
+          <whcg-period-discounter name="Avvecklingskostnader per kvm (diskonterade)" whcgjsonoutput="{{whcgDiscountedCompoundedDeclineCostsJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
+          rate="{{discountrate}}" whcgjsoninput="{{whcgCompoundedDeclineCostsJson}}"></whcg-period-discounter>
 
 
           <!-- Rented area -->
-          <whcg-json-merger whcgjsonoutput="{{whcgAreasJson}}" whcgjsonarrayinput="[{{whcgNonCompoundedAreaAmountsJson}}, {{whcgSumExpansionAreasJson}}, {{whcgSumDeclineAreasJson}}]"></whcg-json-merger>
-          <whcg-period-summarizer mode="add" name="Summa ytor" whcgjsonoutput="{{whcgSumAreasJson}}" whcgjsoninput="{{whcgAreasJson}}"></whcg-period-summarizer>
+          <whcg-json-merger whcgjsonoutput="{{whcgEstablishedAndExpandAreasJson}}" whcgjsonarrayinput="[{{whcgNonCompoundedAreaAmountsJson}}, {{whcgSumExpansionAreasJson}}]"></whcg-json-merger>
+          <whcg-period-summarizer mode="add" name="Hyrd yta" whcgjsonoutput="{{whcgSumEstablishedAndExpandAreasJson}}" whcgjsoninput="{{whcgEstablishedAndExpandAreasJson}}"></whcg-period-summarizer>
+          <whcg-json-merger whcgjsonoutput="{{whcgSumEstablishedAndExpandAreasAndDeclineAreasJson}}" whcgjsonarrayinput="[{{whcgSumEstablishedAndExpandAreasJson}}, {{whcgSumDeclineAreasJson}}]"></whcg-json-merger>
+          <whcg-period-summarizer mode="subtract" name="Hyrd yta" whcgjsonoutput="{{whcgSumAreasJson}}" whcgjsoninput="{{whcgSumEstablishedAndExpandAreasAndDeclineAreasJson}}"></whcg-period-summarizer>
 
 
           <!-- Rent cost per sqm -->
-          <whcg-json-maker name="rentkostpersqm" key="0" value="{{initialRentCostPerSqm}}" datapackage="yearlyamounts" label="kr/kvm"
+          <whcg-json-maker name="Hyreskostnader per kvm (ej uppräknade)" key="0" value="{{initialRentCostPerSqm}}" datapackage="yearlyamounts" label="kr/kvm"
             period="{{period}}" fill whcgjsonoutput="{{whcgNonCompoundedRentCostsPerSqmJson}}"></whcg-json-maker>
-          <whcg-period-compounder name="rentkostpersqm" whcgjsonoutput="{{whcgCompoundedRentCostsPerSqmJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
+          <whcg-period-compounder name="Hyreskostnader per kvm" whcgjsonoutput="{{whcgCompoundedRentCostsPerSqmJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
             rate="{{rentincrease}}" whcgjsoninput="{{whcgNonCompoundedRentCostsPerSqmJson}}"></whcg-period-compounder>
         
           <!-- Rent cost -->
           <whcg-json-merger whcgjsonoutput="{{whcgCompoundedRentCostsPerSqmAndSumAreasJson}}" whcgjsonarrayinput="[{{whcgCompoundedRentCostsPerSqmJson}}, {{whcgSumAreasJson}}]"></whcg-json-merger>
           <whcg-period-summarizer mode="multiply" name="Hyreskostnader" whcgjsonoutput="{{whcgCompoundedRentCostsJson}}" whcgjsoninput="{{whcgCompoundedRentCostsPerSqmAndSumAreasJson}}"></whcg-period-summarizer>
-
+          <whcg-period-discounter name="Hyreskostnader (diskonterade)" whcgjsonoutput="{{whcgDiscountedCompoundedRentCostsJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
+          rate="{{discountrate}}" whcgjsoninput="{{whcgCompoundedRentCostsJson}}"></whcg-period-discounter>
           
           <!-- Heat cost per sqm -->
           <whcg-multiplier valuearray="[{{kwh}}, {{krperkwh}}]" valueoutput="{{initialHeatCostPerSqm}}"></whcg-multiplier>
-          <whcg-json-maker name="heat" datapackage="yearlyamounts" label="kr/kvm" key="0" value="{{initialHeatCostPerSqm}}" period="{{period}}"
+          <whcg-json-maker name="Värmekostnader per kvm (ej uppräknade)" datapackage="yearlyamounts" label="kr/kvm" key="0" value="{{initialHeatCostPerSqm}}" period="{{period}}"
             fill whcgjsonoutput="{{whcgNonCompoundedHeatCostsPerSqmJson}}"></whcg-json-maker>
-          <whcg-period-compounder name="heat" whcgjsonoutput="{{whcgCompoundedHeatCostsPerSqmJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
+          <whcg-period-compounder name="Värmekostnader per kvm" whcgjsonoutput="{{whcgCompoundedHeatCostsPerSqmJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
           rate="{{inflation}}" whcgjsoninput="{{whcgNonCompoundedHeatCostsPerSqmJson}}"></whcg-period-compounder>
 
           <!-- Heat cost -->
           <whcg-json-merger whcgjsonoutput="{{whcgCompoundedHeatCostsPerSqmAndSumAreasJson}}" whcgjsonarrayinput="[{{whcgCompoundedHeatCostsPerSqmJson}}, {{whcgSumAreasJson}}]"></whcg-json-merger>
-          <whcg-period-summarizer mode="multiply" name="Hyreskostnader" whcgjsonoutput="{{whcgCompoundedHeatCostsJson}}" whcgjsoninput="{{whcgCompoundedHeatCostsPerSqmAndSumAreasJson}}"></whcg-period-summarizer>
+          <whcg-period-summarizer mode="multiply" name="Värmekostnader" whcgjsonoutput="{{whcgCompoundedHeatCostsJson}}" whcgjsoninput="{{whcgCompoundedHeatCostsPerSqmAndSumAreasJson}}"></whcg-period-summarizer>
+          <whcg-period-discounter name="Värmekostnader (diskonterade)" whcgjsonoutput="{{whcgDiscountedCompoundedHeatCostsJson}}" datapackage="yearlyamounts" label="kr" period="{{period}}"
+          rate="{{discountrate}}" whcgjsoninput="{{whcgCompoundedHeatCostsJson}}"></whcg-period-discounter>
 
 
+          <!-- Merged Costs -->
+          <whcg-json-merger whcgjsonoutput="{{whcgMergedCompoundedCostsJson}}" whcgjsonarrayinput="[{{whcgCompoundedHeatCostsJson}}, {{whcgCompoundedRentCostsJson}}, {{whcgCompoundedDeclineCostsJson}}, {{whcgCompoundedExpandCostsJson}}, {{whcgInitialEstablishCost}}]"></whcg-json-merger>
+          <whcg-period-summarizer mode="add" name="Totala kostnader" whcgjsonoutput="{{whcgTotalMergedCompoundedCostsJson}}" whcgjsoninput="{{whcgMergedCompoundedCostsJson}}"></whcg-period-summarizer>
+          <whcg-json-merger whcgjsonoutput="{{whcgMergedDiscountedCompoundedCostsJson}}" whcgjsonarrayinput="[{{whcgDiscountedCompoundedHeatCostsJson}}, {{whcgDiscountedCompoundedRentCostsJson}}, {{whcgDiscountedCompoundedDeclineCostsJson}}, {{whcgDiscountedCompoundedExpandCostsJson}}, {{whcgInitialEstablishCost}}]"></whcg-json-merger>
+          <whcg-period-summarizer mode="add" name="Totala kostnader (diskonterade)" whcgjsonoutput="{{whcgTotalMergedDiscountedCompoundedCostsJson}}" whcgjsoninput="{{whcgMergedDiscountedCompoundedCostsJson}}"></whcg-period-summarizer>
+          <whcg-json-merger whcgjsonoutput="{{whcgMergedAndTotalCompoundedCostsJson}}" whcgjsonarrayinput="[{{whcgMergedCompoundedCostsJson}}, {{whcgTotalMergedCompoundedCostsJson}}]"></whcg-json-merger>
+          <whcg-json-merger whcgjsonoutput="{{whcgDiscountedMergedAndTotalCompoundedCostsJson}}" whcgjsonarrayinput="[{{whcgMergedDiscountedCompoundedCostsJson}}, {{whcgTotalMergedDiscountedCompoundedCostsJson}}]"></whcg-json-merger>
+
+          
 
 
-
-
-
-
-
-            <whcg-chart-feeder whcgjsoninput="[[whcgSumAreasJson]]" datapackage="yearlyamounts" chartjs="{{chartJsSumAreasJson}}"></whcg-chart-feeder>
+            <!-- <whcg-chart-feeder whcgjsoninput="[[whcgSumAreasJson]]" datapackage="yearlyamounts" chartjs="{{chartJsSumAreasJson}}"></whcg-chart-feeder>
             <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
               chartjson="{{chartJsSumAreasJson}}"></whcg-chart>
   
@@ -383,20 +394,111 @@
   
             <whcg-chart-feeder whcgjsoninput="[[whcgSumDeclineAreasJson]]" datapackage="yearlyamounts" chartjs="{{chartJsSumDeclineAreasJson}}"></whcg-chart-feeder>
             <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
-              chartjson="{{chartJsSumDeclineAreasJson}}"></whcg-chart>
+              chartjson="{{chartJsSumDeclineAreasJson}}"></whcg-chart>-->
 
-              <whcg-chart-feeder whcgjsoninput="[[whcgCompoundedRentCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJswhcgCompoundedRentCostsJson}}"></whcg-chart-feeder>
+
+              <!-- <whcg-chart-feeder whcgjsoninput="[[whcgCompoundedHeatCostsJson]]" datapackage="yearlyamounts" chartjs="{chartJsCompoundedRentCostsJson}}"></whcg-chart-feeder>
           <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
-            chartjson="{{chartJswhcgCompoundedRentCostsJson}}"></whcg-chart>
+            chartjson="{{chartJsCompoundedRentCostsJson}}"></whcg-chart> 
+ -->
+
+
+          <!-- Charts Areas -->
+          <whcg-chart-feeder whcgjsoninput="[[whcgSumAreasJson]]" datapackage="yearlyamounts" chartjs="{{chartJsSumAreasJson}}"></whcg-chart-feeder>
+          <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+            chartjson="{{chartJsSumAreasJson}}"></whcg-chart> 
+
+          <whcg-chart-feeder whcgjsoninput="[[whcgSumDeclineAreasJson]]" datapackage="yearlyamounts" chartjs="{{chartJsSumDeclineAreasJson}}"></whcg-chart-feeder>
+          <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+            chartjson="{{chartJsSumDeclineAreasJson}}"></whcg-chart> 
+
+          <whcg-chart-feeder whcgjsoninput="[[whcgSumExpansionAreasJson]]" datapackage="yearlyamounts" chartjs="{{chartJsSumExpansionAreasJson}}"></whcg-chart-feeder>
+            <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+              chartjson="{{chartJsSumExpansionAreasJson}}"></whcg-chart> 
+
+            <whcg-chart-feeder whcgjsoninput="[[whcgNonCompoundedAreaAmountsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsNonCompoundedAreaAmountsJson}}"></whcg-chart-feeder>
+            <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+              chartjson="{{chartJsNonCompoundedAreaAmountsJson}}"></whcg-chart> 
+
+
+              <!-- Charts Costs -->
+          <whcg-chart-feeder whcgjsoninput="[[whcgCompoundedHeatCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsCompoundedHeatCostsJson}}"></whcg-chart-feeder>
+          <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+            chartjson="{{chartJsCompoundedHeatCostsJson}}"></whcg-chart> 
+            <whcg-chart-feeder whcgjsoninput="[[whcgDiscountedCompoundedHeatCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsDiscountedCompoundedHeatCostsJson}}"></whcg-chart-feeder>
+            <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+              chartjson="{{chartJsDiscountedCompoundedHeatCostsJson}}"></whcg-chart> 
+
+  
+
+              <whcg-chart-feeder whcgjsoninput="[[whcgCompoundedRentCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsCompoundedRentCostsJson}}"></whcg-chart-feeder>
+              <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+                chartjson="{{chartJsCompoundedRentCostsJson}}"></whcg-chart> 
+                <whcg-chart-feeder whcgjsoninput="[[whcgDiscountedCompoundedRentCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsDiscountedCompoundedRentCostsJson}}"></whcg-chart-feeder>
+                <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+                  chartjson="{{chartJsDiscountedCompoundedRentCostsJson}}"></whcg-chart> 
+
+
+
+
 
             <whcg-chart-feeder whcgjsoninput="[[whcgCompoundedDeclineCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsCompoundedDeclineCostsJson}}"></whcg-chart-feeder>
             <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
-              chartjson="{{chartJsCompoundedDeclineCostsJson}}"></whcg-chart>
+              chartjson="{{chartJsCompoundedDeclineCostsJson}}"></whcg-chart> 
+
+              <whcg-chart-feeder whcgjsoninput="[[whcgDiscountedCompoundedDeclineCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsDiscountedCompoundedDeclineCostsJson}}"></whcg-chart-feeder>
+              <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+                chartjson="{{chartJsDiscountedCompoundedDeclineCostsJson}}"></whcg-chart> 
+
+
 
               <whcg-chart-feeder whcgjsoninput="[[whcgCompoundedExpandCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsCompoundedExpandCostsJson}}"></whcg-chart-feeder>
               <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
-                chartjson="{{chartJsCompoundedExpandCostsJson}}"></whcg-chart>
-         
+                chartjson="{{chartJsCompoundedExpandCostsJson}}"></whcg-chart> 
+
+                <whcg-chart-feeder whcgjsoninput="[[whcgDiscountedCompoundedExpandCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsDiscountedCompoundedExpandCostsJson}}"></whcg-chart-feeder>
+                <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+                  chartjson="{{chartJsDiscountedCompoundedExpandCostsJson}}"></whcg-chart> 
+
+                  <whcg-chart-feeder whcgjsoninput="[[whcgTotalMergedCompoundedCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsTotalMergedCompoundedCostsJson}}"></whcg-chart-feeder>
+                  <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+                    chartjson="{{chartJsTotalMergedCompoundedCostsJson}}"></whcg-chart>
+                    <whcg-chart-feeder whcgjsoninput="[[whcgTotalMergedDiscountedCompoundedCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsTotalMergedDiscountedCompoundedCostsJson}}"></whcg-chart-feeder>
+                    <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+                      chartjson="{{chartJsTotalMergedDiscountedCompoundedCostsJson}}"></whcg-chart>
+
+
+                <whcg-chart-feeder whcgjsoninput="[[whcgMergedCompoundedCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsMergedCompoundedCostsJson}}"></whcg-chart-feeder>
+                <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+                  chartjson="{{chartJsMergedCompoundedCostsJson}}"></whcg-chart>
+                  <whcg-chart-feeder whcgjsoninput="[[whcgMergedDiscountedCompoundedCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsMergedDiscountedCompoundedCostsJson}}"></whcg-chart-feeder>
+                  <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica"
+                    chartjson="{{chartJsMergedDiscountedCompoundedCostsJson}}"></whcg-chart>
+
+
+       <!-- Grid Costs -->
+                    <whcg-grid griddatastr="{{whcgCompoundedHeatCostsJson}}"></whcg-grid>
+                    <whcg-grid griddatastr="{{whcgDiscountedCompoundedHeatCostsJson}}"></whcg-grid>
+                    <whcg-grid griddatastr="{{whcgCompoundedRentCostsJson}}"></whcg-grid>
+                    <whcg-grid griddatastr="{{whcgDiscountedCompoundedRentCostsJson}}"></whcg-grid>
+
+                    <whcg-grid griddatastr="{{whcgCompoundedDeclineCostsJson}}"></whcg-grid>
+                    <whcg-grid griddatastr="{{whcgDiscountedCompoundedDeclineCostsJson}}"></whcg-grid>
+                    <whcg-grid griddatastr="{{whcgCompoundedExpandCostsJson}}"></whcg-grid>
+                    <whcg-grid griddatastr="{{whcgDiscountedCompoundedExpandCostsJson}}"></whcg-grid>
+
+                    <whcg-grid griddatastr="{{whcgTotalMergedCompoundedCostsJson}}"></whcg-grid>
+                    <whcg-grid griddatastr="{{whcgTotalMergedDiscountedCompoundedCostsJson}}"></whcg-grid>
+
+                    <whcg-grid griddatastr="{{whcgMergedCompoundedCostsJson}}"></whcg-grid>
+                    <whcg-grid griddatastr="{{whcgMergedDiscountedCompoundedCostsJson}}"></whcg-grid>
+
+                    <whcg-grid griddatastr="{{whcgMergedAndTotalCompoundedCostsJson}}"></whcg-grid>
+                    <whcg-grid griddatastr="{{whcgDiscountedMergedAndTotalCompoundedCostsJson}}"></whcg-grid>
+
+
+
+
          
                 <!-- 
 
@@ -424,105 +526,14 @@
 
 
 
-          <!-- 
-    
-    <whcg-period-compounder name="Vattenkostnader" whcgjsonoutput="{{whcgWaterJson}}" datapackage="yearlyamounts" label="Water" period="{{period}}" rate="{{inflation}}" whcgjsoninput="{{initialWaterCost}}"></whcg-period-compounder>
-    <whcg-period-compounder name="Värmekostnader" whcgjsonoutput="{{whcgHeatJson}}" datapackage="yearlyamounts" label="Heat" period="{{period}}" rate="{{inflation}}" whcgjsoninput="{{initialHeatCost}}"></whcg-period-compounder>
-    
-    <whcg-period-discounter name="Elkostnader" whcgjsonoutput="{{whcgDiscountedElectricityJson}}" label="Electricity" period="{{period}}" rate="{{discountrate}}" whcgjsoninput="{{whcgElectricityJson}}"></whcg-period-discounter>
-    <whcg-period-discounter name="Vattenkostnader" whcgjsonoutput="{{whcgDiscountedWaterJson}}" label="Water" period="{{period}}" rate="{{discountrate}}" whcgjsoninput="{{whcgWaterJson}}"></whcg-period-discounter>
-    <whcg-period-discounter name="Värmekostnader" whcgjsonoutput="{{whcgDiscountedHeatJson}}" label="Heat" period="{{period}}" rate="{{discountrate}}" whcgjsoninput="{{whcgHeatJson}}"></whcg-period-discounter>
-    
-    <whcg-json-merger whcgjsonoutput="{{whcgCostsJson}}" whcgjsonarrayinput="[{{whcgElectricityJson}}, {{whcgWaterJson}}, {{whcgHeatJson}}]"></whcg-json-merger>
-    <whcg-json-merger whcgjsonoutput="{{whcgDiscountedCostsJson}}" whcgjsonarrayinput="[{{whcgDiscountedElectricityJson}}, {{whcgDiscountedWaterJson}}, {{whcgDiscountedHeatJson}}]"></whcg-json-merger>
-    <whcg-json-merger whcgjsonoutput="{{whcgCostsAndSumCostsJson}}" whcgjsonarrayinput="[{{whcgElectricityJson}}, {{whcgWaterJson}}, {{whcgHeatJson}}, {{whcgSumCostsJson}}]"></whcg-json-merger>
-    <whcg-json-merger whcgjsonoutput="{{whcgDiscountedCostsAndSumDiscountedCostsJson}}" whcgjsonarrayinput="[{{whcgDiscountedElectricityJson}}, {{whcgDiscountedWaterJson}}, {{whcgDiscountedHeatJson}}, {{whcgSumDiscountedCostsJson}}]"></whcg-json-merger>
+          
     
 
-    <whcg-period-summarizer name="Summa kostnader" whcgjsonoutput="{{whcgSumCostsJson}}" whcgjsoninput="{{whcgCostsJson}}"></whcg-period-summarizer>
-    <whcg-period-summarizer name="Summa diskonterade kostnader" whcgjsonoutput="{{whcgSumDiscountedCostsJson}}" whcgjsoninput="{{whcgDiscountedCostsJson}}"></whcg-period-summarizer>
-   
 
-    <whcg-chart-feeder whcgjsoninput="[[whcgWaterJson]]" datapackage="yearlyamounts" chartjs="{{chartJsWaterJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgDiscountedWaterJson]]" datapackage="yearlyamounts" chartjs="{{chartJsDiscountedWaterJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgElectricityJson]]" datapackage="yearlyamounts" chartjs="{{chartJsElectricityJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgDiscountedElectricityJson]]" datapackage="yearlyamounts" chartjs="{{chartJsDiscountedElectricityJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgHeatJson]]" datapackage="yearlyamounts" chartjs="{{chartJsHeatJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgDiscountedHeatJson]]" datapackage="yearlyamounts" chartjs="{{chartJsDiscountedHeatJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsCostsJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgDiscountedCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsDiscountedCostsJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgSumCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsSumCostsJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgCostsAndSumCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsCostsAndSumCostsJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgSumDiscountedCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsSumDiscountedCostsJson}}"></whcg-chart-feeder>
-    <whcg-chart-feeder whcgjsoninput="[[whcgDiscountedCostsAndSumDiscountedCostsJson]]" datapackage="yearlyamounts" chartjs="{{chartJsDiscountedCostsAndSumDiscountedCostsJson}}"></whcg-chart-feeder>
-    
-
-    <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsWaterJson}}"></whcg-chart>
-    <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsDiscountedWaterJson}}"></whcg-chart>
-    <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsElectricityJson}}"></whcg-chart>
-    <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsDiscountedElectricityJson}}"></whcg-chart>
-    <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsHeatJson}}"></whcg-chart>
-    <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsDiscountedHeatJson}}"></whcg-chart>
-    <whcg-chart type="bar" stacked width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsCostsJson}}"></whcg-chart>
-    <whcg-chart type="line" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsDiscountedCostsJson}}"></whcg-chart>
-    <whcg-chart type="bar" width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsSumCostsJson}}"></whcg-chart>
-    <whcg-chart type="line" stacked width="800px" height="300px" legendposition="right" legendfontsize="10" legendfontfamily="Helvetica" chartjson="{{chartJsCostsAndSumCostsJson}}"></whcg-chart>
-  
-
-    <whcg-grid griddatastr="{{whcgCostsJson}}"></whcg-grid>
-    <whcg-grid griddatastr="{{whcgSumCostsJson}}"></whcg-grid>
-    <whcg-grid griddatastr="{{whcgDiscountedCostsJson}}"></whcg-grid>
-    <whcg-grid griddatastr="{{whcgCostsAndSumCostsJson}}"></whcg-grid>    -->
+       
 
         </template>
       </dom-bind>
-
-
-
-      <!-- <whcg-number-field-box column datapackage="cost" label="kr" name="Elkostnad" period="0" output-string="{{initialElectricityCosts}}" type="electricity">
-              <whcg-number-field kind="amount" period="0" label="kwh" placeholder="...antal" value="12" suffix="kWh"></whcg-number-field>
-              <whcg-number-field kind="price" period="0" label="kr/kWh" placeholder="... antal" value="8" suffix="kr"></whcg-number-field>
-          </whcg-number-field-box>
-
-          <whcg-number-field-box column datapackage="cost" label="kr" name="Vattenkostnad" period="0" output-string="{{initialWaterCosts}}" type="water">
-              <whcg-number-field kind="amount" period="0" label="m3" placeholder="...antal" value="45" suffix="m3"></whcg-number-field>
-              <whcg-number-field kind="price" period="0" label="kr/m3" placeholder="... antal" value="3" suffix="kr"></whcg-number-field>
-          </whcg-number-field-box> -->
-
-      <!-- <whcg-select label="Rubrik" placeholder="Placeholder" data='[{"value": "1", "caption": "One"}, {"value": "2", "caption": "Two"}]'></whcg-select> -->
-
-      <!-- <whcg-box-container>
-
-          <whcg-number-field-box column output="{{initialElectricityCosts}}">
-            <whcg-number-field label="kwh" placeholder="...antal" value="13" suffix="kWh"></whcg-number-field>
-            <whcg-number-field label="kr/kWh" placeholder="... antal" value="8" suffix="kr"></whcg-number-field>
-          </whcg-number-field-box>
-          
-          <whcg-number-field-box column output="{{initialWaterCosts}}">
-            <whcg-number-field label="m3" placeholder="placeholder" value="5" suffix="m3"></whcg-number-field>
-            <whcg-number-field label="kr/m3" placeholder="placeholder" value="7" suffix="kr"></whcg-number-field>
-          </whcg-number-field-box> 
-
-          <whcg-number-field-box column output="{{periodLength}}">
-            <whcg-number-field label="Kalkylperiod" placeholder="placeholder" value="5" suffix="år"></whcg-number-field>
-          </whcg-number-field-box>
-
-          <whcg-number-field-box column output="{{inflation}}">
-            <whcg-number-field label="Inflation" placeholder="placeholder" value="0.07" suffix="%"></whcg-number-field>
-          </whcg-number-field-box>
-
-        </whcg-box-container>
-
-
-        <whcg-period-compounder jsondata="{{electricityJson}}" label="Electricity" period="{{periodLength}}" rate="{{inflation}}" initial-value="{{initialElectricityCosts}}"></whcg-period-compounder>
-        <whcg-period-compounder jsondata="{{waterJson}}" label="Water" period="{{periodLength}}" rate="{{inflation}}" initial-value="{{initialWaterCosts}}"></whcg-period-compounder> -->
-
-      <!-- <whcg-json-merger mergedjson="{{mergedjson}}" arrayreceiver="[{{waterJson}}, {{electricityJson}}]"></whcg-json-merger> -->
-
-
-      <!-- <whcg-chart-feeder jsoninput="[[mergedjson]]" datapackage="suppliers" chartjs="{{chartJsJson}}"></whcg-chart-feeder> -->
-
-
 
 
 
