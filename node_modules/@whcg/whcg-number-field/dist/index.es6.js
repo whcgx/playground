@@ -12,7 +12,7 @@ class WhcgNumberField extends PolymerElement {
     static get template() {
         return html `
       
-    <vaadin-text-field value="{{value}}" label="{{label}}" placeholder="{{placeholder}}" theme="align-right" prevent-invalid-input pattern="[0-9,.]*" >
+    <vaadin-text-field value="{{value}}" label="{{label}}" placeholder="{{placeholder}}" theme="align-right" prevent-invalid-input pattern="[0-9]*" >
         <div slot="suffix">{{suffix}}</div>
     </vaadin-text-field>
 
@@ -63,6 +63,8 @@ class WhcgNumberField extends PolymerElement {
     }
 
     _valueChanged() {
+        console.log('new value');
+        console.log(this.value);
         this.valueoutput = this.value;
     }
 
